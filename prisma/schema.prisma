@@ -8,11 +8,53 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  username     String   @unique
+  password     String
+  email        String   @unique
+  musics       Music[]
   refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Music {
+  id              String            @id @default(uuid())
+  name            String
+  artist          String
+  genre           String
+  image           String
+  status          MusicStatus
+  user            User              @relation(fields: [userId], references: [id])
+  userId          String
+  instruments     Instrument[]      @relation("MusicInstruments")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  MusicInstrument MusicInstrument[]
+}
+
+model Instrument {
+  id              String            @id @default(uuid())
+  name            String
+  icon            String
+  musics          Music[]           @relation("MusicInstruments")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  MusicInstrument MusicInstrument[]
+}
+
+model MusicInstrument {
+  musicId      String
+  instrumentId String
+
+  music      Music      @relation(fields: [musicId], references: [id])
+  instrument Instrument @relation(fields: [instrumentId], references: [id])
+
+  @@id([musicId, instrumentId])
+}
+
+enum MusicStatus {
+  LEARNING
+  REPERTOIRE
+  WANT_TO_LEARN
 }

@@ -1,0 +1,39 @@
+import { Controller, Get, Post, Body, Param, Patch, Delete, UseGuards } from '@nestjs/common';
+import { MusicService } from '../../domain/services/music.service';
+import { CreateMusicDto } from '../dtos/create-music.dto';
+import { UpdateMusicDto } from '../dtos/update-music.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '../../../auth/interfaces/decorators/get-user.decorator';
+import { User } from '@prisma/client';
+import { AuthUser } from '../../../shared/dtos/auth-user.dto';
+
+@Controller('music')
+@UseGuards(AuthGuard('jwt')) // Protege todas as rotas
+export class MusicController {
+    constructor(private readonly musicService: MusicService) { }
+
+    @Post()
+    async createMusic(@Body() createMusicDto: CreateMusicDto, @GetUser() user: AuthUser) {
+        console.log(user)
+        return this.musicService.createMusic(createMusicDto, user.userId);
+    }
+
+    @Get()
+    async getMusics(@GetUser() user: AuthUser) {
+        return this.musicService.getMusicsByUser(user.userId);
+    }
+
+    @Patch(':id')
+    async updateMusic(
+        @Param('id') id: string,
+        @Body() updateMusicDto: UpdateMusicDto,
+        @GetUser() user: AuthUser,
+    ) {
+        return this.musicService.updateMusic(id, user.userId, updateMusicDto);
+    }
+
+    @Delete(':id')
+    async deleteMusic(@Param('id') id: string, @GetUser() user: AuthUser) {
+        return this.musicService.deleteMusic(id, user.userId);
+    }
+}

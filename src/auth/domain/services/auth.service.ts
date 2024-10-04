@@ -39,9 +39,15 @@ export class AuthService {
 
         const payload = { username: user.username, sub: user.id }
 
+        const accessToken = this.jwtService.sign(payload)
+        const refreshToken = this.generateRefreshToken(user.id)
+
+        await this.userRepository.updateRefreshToken(user.id, refreshToken)
+
         return {
             data: {
-                accessToken: this.jwtService.sign(payload)
+                accessToken,
+                refreshToken
             },
             errors: [],
             message: "Login successful",
@@ -91,6 +97,55 @@ export class AuthService {
             message: "Register successful",
             statusCode: 201,
             data: createdUser.id
+        }
+    }
+
+    generateRefreshToken(userId: String) {
+        return this.jwtService.sign({ sub: userId }, { expiresIn: '7d' })
+    }
+
+    async refreshAccessToken(refreshToken: string): Promise<ApiResponse> {
+        const errors: ApiError[] = [];
+
+        if (!refreshToken) {
+            errors.push({ label: 'refreshToken', description: 'Refresh token is required' });
+            return {
+                errors,
+                message: "Refresh token required",
+                statusCode: 400,
+            };
+        }
+
+        try {
+            const decoded = this.jwtService.verify(refreshToken);
+            const userId = decoded.sub;
+
+            const user = await this.userRepository.findById(userId);
+            if (!user || user.refreshToken !== refreshToken) {
+                return {
+                    errors: [{ label: 'refreshToken', description: 'Invalid refresh token' }],
+                    message: "Invalid refresh token",
+                    statusCode: 401,
+                };
+            }
+
+            const newAccessToken = this.jwtService.sign({ username: user.username, sub: user.id });
+            const newRefreshToken = this.generateRefreshToken(user.id)
+
+            this.userRepository.updateRefreshToken(user.id, newRefreshToken)
+
+            return {
+                data: { accessToken: newAccessToken, refreshToken: newRefreshToken },
+                errors: [],
+                message: "Token refreshed successfully",
+                statusCode: 200,
+            };
+        } catch (error) {
+            return {
+                errors: [{ label: 'refreshToken', description: 'Invalid or expired refresh token' }],
+                message: "Invalid or expired refresh token",
+                statusCode: 401,
+            };
         }
     }
 }

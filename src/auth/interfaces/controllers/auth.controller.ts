@@ -17,6 +17,11 @@ export class AuthController {
         return this.authService.register(registerDto)
     }
 
+    @Post('refresh')
+    async refresh(@Body('refreshToken') refreshToken: string) {
+        return this.authService.refreshAccessToken(refreshToken)
+    }
+
 
     // @UseGuards(JwtAuthGuard)
     // @Get('profile')

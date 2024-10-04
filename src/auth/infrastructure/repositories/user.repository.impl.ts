@@ -6,6 +6,12 @@ import { PrismaService } from "../../../../prisma/prisma.service";
 export class UserRepositoryImpl {
     constructor(private readonly prismaService: PrismaService) { }
 
+    async findById(userId: string): Promise<User | null> {
+        return this.prismaService.user.findUnique({
+            where: { id: userId },
+        });
+    }
+
     async findByUsername(username: string): Promise<User | null> {
         return this.prismaService.user.findUnique({
             where: { username }
@@ -26,5 +32,12 @@ export class UserRepositoryImpl {
                 password
             }
         })
+    }
+
+    async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
+        await this.prismaService.user.update({
+            where: { id: userId },
+            data: { refreshToken },
+        });
     }
 }

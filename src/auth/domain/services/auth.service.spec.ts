@@ -21,7 +21,8 @@ describe('AuthService', () => {
                     useValue: {
                         findByUsername: jest.fn(),
                         findByEmail: jest.fn(),
-                        createUser: jest.fn()
+                        createUser: jest.fn(),
+                        updateRefreshToken: jest.fn()
                     }
                 },
                 {
@@ -181,7 +182,8 @@ describe('AuthService', () => {
                     id: 'fake-id',
                     password: '123456798',
                     updatedAt: new Date(),
-                    username: 'user1'
+                    username: 'user1',
+                    refreshToken: null
                 }
 
                 return user
@@ -207,7 +209,8 @@ describe('AuthService', () => {
                     id: 'fake-id',
                     password: '123456798',
                     updatedAt: new Date(),
-                    username: 'user1'
+                    username: 'user1',
+                    refreshToken: null
                 }
 
                 return user
@@ -233,7 +236,8 @@ describe('AuthService', () => {
                     id: 'some-fake-id',
                     password: registerDto.password,
                     username: registerDto.username,
-                    updatedAt: new Date()
+                    updatedAt: new Date(),
+                    refreshToken: null
                 }
             })
 

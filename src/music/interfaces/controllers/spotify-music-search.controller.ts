@@ -5,7 +5,7 @@ import { ApiResponse } from 'src/shared/utils/response.util';
 import { Request } from 'express';
 
 @Controller('spotify-music-search')
-@UseGuards(AuthGuard('jwt')) // Protegido por JWT
+@UseGuards(AuthGuard('jwt'))
 export class SpotifyMusicSearchController {
     constructor(private readonly spotifyMusicSearchService: SpotifyMusicSearchService) { }
 

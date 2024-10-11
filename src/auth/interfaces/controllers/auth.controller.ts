@@ -21,10 +21,4 @@ export class AuthController {
     async refresh(@Body('refreshToken') refreshToken: string) {
         return this.authService.refreshAccessToken(refreshToken)
     }
-
-    // @UseGuards(JwtAuthGuard)
-    // @Get('profile')
-    // getProfile() {
-    //     return { message: 'Im protected' }
-    // }
 }

@@ -36,7 +36,6 @@ export class SpotifyMusicSearchService {
                 Authorization: `Bearer ${token}`,
             };
 
-            // Fazendo a requisição à API do Spotify
             const response = await lastValueFrom(
                 this.httpService
                     .get(this.SPOTIFY_API_URL, {
@@ -51,14 +50,13 @@ export class SpotifyMusicSearchService {
                     .pipe(map((res) => res.data))
             );
 
-            // Mapeando os dados retornados no formato de "Music"
             const tracks = response.tracks.items.map((track: any) => ({
                 name: track.name,
                 artist: track.artists.map((artist: any) => artist.name).join(', '),
-                genre: '', // O Spotify não retorna gênero diretamente
-                image: track.album.images[0]?.url || null, // Pega a primeira imagem do álbum
-                status: 'WANT_TO_LEARN', // Status padrão
-                instrumentIds: [], // Instrumentos serão adicionados após a música ser salva
+                genre: '', 
+                image: track.album.images[0]?.url || null, 
+                status: 'WANT_TO_LEARN',
+                instrumentIds: [],
             }));
 
             const nextOffset = offset + limit;
@@ -78,7 +76,7 @@ export class SpotifyMusicSearchService {
                 statusCode: 200,
                 data: {
                     items: tracks,
-                    total: response.tracks.total, // Total de resultados
+                    total: response.tracks.total,
                     next,
                     previous
                 },

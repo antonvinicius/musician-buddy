@@ -4,11 +4,10 @@ import { CreateMusicDto } from '../dtos/create-music.dto';
 import { UpdateMusicDto } from '../dtos/update-music.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../../../auth/interfaces/decorators/get-user.decorator';
-import { User } from '@prisma/client';
 import { AuthUser } from '../../../shared/dtos/auth-user.dto';
 
 @Controller('music')
-@UseGuards(AuthGuard('jwt')) // Protege todas as rotas
+@UseGuards(AuthGuard('jwt')) 
 export class MusicController {
     constructor(private readonly musicService: MusicService) { }
 

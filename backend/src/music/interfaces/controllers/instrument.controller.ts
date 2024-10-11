@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { InstrumentService } from "src/music/domain/services/instrument.service";
+import { InstrumentService } from "../../../music/domain/services/instrument.service";
 
 @Controller('instrument')
 @UseGuards(AuthGuard('jwt'))

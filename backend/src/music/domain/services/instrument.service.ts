@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../../prisma/prisma.service";
-import { ApiResponse } from "src/shared/utils/response.util";
+import { ApiResponse } from "../../../shared/utils/response.util";
 
 @Injectable()
 export class InstrumentService {

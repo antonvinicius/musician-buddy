@@ -2,9 +2,9 @@ import { Test, TestingModule } from "@nestjs/testing"
 import { AuthService } from "./auth.service"
 import { UserRepositoryImpl } from "../../infrastructure/repositories/user.repository.impl"
 import { JwtService } from "@nestjs/jwt"
-import { LoginDto } from "src/auth/interfaces/dtos/login.dto"
+import { LoginDto } from "../../interfaces/dtos/login.dto"
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from "src/auth/interfaces/dtos/register.dto"
+import { RegisterDto } from "../../interfaces/dtos/register.dto"
 import { User } from "@prisma/client"
 
 describe('AuthService', () => {

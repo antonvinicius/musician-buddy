@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/components/button_component.dart';
 import 'package:mobile/components/textfield_component.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -10,7 +13,34 @@ class LoginScreen extends StatelessWidget {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
 
-    void onSignIn() {}
+    Future<http.Response> requestSignIn(String username, String password) {
+      return http.post(
+        Uri.parse(
+            "https://musician-buddy-production.up.railway.app/auth/login"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"username": username, "password": password}),
+      );
+    }
+
+    void onSignIn() async {
+      var username = usernameController.value.text;
+      var password = passwordController.value.text;
+
+      try {
+        http.Response response = await requestSignIn(username, password);
+
+        if (response.statusCode == 201) {
+          print("Login bem sucedido ${response.body}");
+        } else {
+          print("Erro ao realizar login ${response.body}");
+        }
+      } catch (e) {
+        print("Erro ao tentar fazer login: $e");
+      } finally {
+        usernameController.clear();
+        passwordController.clear();
+      }
+    }
 
     void onRegister() {}
 

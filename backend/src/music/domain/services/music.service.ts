@@ -5,6 +5,11 @@ import { UpdateMusicDto } from '../../interfaces/dtos/update-music.dto';
 import { MusicStatus } from '@prisma/client';
 import { ApiResponse, ApiError } from '../../../shared/utils/response.util';
 
+export interface MusicQuery {
+    status: MusicStatus | undefined;
+    instrumentId: string | undefined;
+}
+
 @Injectable()
 export class MusicService {
     constructor(private readonly prisma: PrismaService) { }
@@ -83,9 +88,17 @@ export class MusicService {
         };
     }
 
-    async getMusicsByUser(userId: string): Promise<ApiResponse> {
+    async getMusicsByUser(userId: string, query: MusicQuery = null): Promise<ApiResponse> {
         const musics = await this.prisma.music.findMany({
-            where: { userId },
+            where: {
+                userId,
+                status: query.status,
+                instruments: {
+                    some: {
+                        id: query.instrumentId
+                    }
+                }
+            },
             include: { instruments: true },
         });
 

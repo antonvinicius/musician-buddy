@@ -14,13 +14,17 @@ export class MusicController {
 
     @Post()
     async createMusic(@Body() createMusicDto: CreateMusicDto, @GetUser() user: AuthUser) {
-        console.log(user)
-        return this.musicService.createMusic(createMusicDto, user.userId);
+        return await this.musicService.createMusic(createMusicDto, user.userId);
     }
 
     @Get()
     async getMusics(@GetUser() user: AuthUser, @Query("status") status: MusicStatus, @Query("instrumentId") instrumentId: string) {
-        return this.musicService.getMusicsByUser(user.userId, { status, instrumentId });
+        return await this.musicService.getMusicsByUser(user.userId, { status, instrumentId });
+    }
+
+    @Get(':id')
+    async getMusicById(@Param('id') id: string) {
+        return await this.musicService.getMusicById(id)
     }
 
     @Patch(':id')
@@ -29,11 +33,11 @@ export class MusicController {
         @Body() updateMusicDto: UpdateMusicDto,
         @GetUser() user: AuthUser,
     ) {
-        return this.musicService.updateMusic(id, user.userId, updateMusicDto);
+        return await this.musicService.updateMusic(id, user.userId, updateMusicDto);
     }
 
     @Delete(':id')
     async deleteMusic(@Param('id') id: string, @GetUser() user: AuthUser) {
-        return this.musicService.deleteMusic(id, user.userId);
+        return await this.musicService.deleteMusic(id, user.userId);
     }
 }

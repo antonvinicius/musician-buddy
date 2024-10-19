@@ -14,6 +14,30 @@ export interface MusicQuery {
 export class MusicService {
     constructor(private readonly prisma: PrismaService) { }
 
+    async getMusicById(id: string): Promise<ApiResponse> {
+        
+        const music = await this.prisma.music.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!music) {
+            return {
+                errors: [],
+                statusCode: 404,
+                message: 'Not found',
+            }
+        }
+
+        return {
+            errors: [],
+            statusCode: 200,
+            message: 'Music found successfully',
+            data: music
+        }
+    }
+
     async createMusic(createMusicDto: CreateMusicDto, userId: string): Promise<ApiResponse> {
         const errors: ApiError[] = [];
 
